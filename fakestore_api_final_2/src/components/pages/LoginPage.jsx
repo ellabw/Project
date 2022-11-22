@@ -41,11 +41,12 @@ const LoginPage = () => {
     if (email === "user@login.com" && password === "user") {
       localStorage.setItem("user", "JklEi95iKr2l");
       navigate(`/`, { replace: location });
-      // } else if (email === "admin@login.com" && password === "admin123") {
-      //   localStorage.setItem("admin", "bhd3b3SGT8");
+    } else if (email === "admin@login.com" && password === "admin123") {
+      localStorage.setItem("admin", "bhd3b3SGT8");
+      navigate(`/stok`, { replace: location });
       //   // alert("salah");
     } else {
-      alert("salah");
+      alert("Email atau Password salah");
     }
   };
 
@@ -53,7 +54,7 @@ const LoginPage = () => {
     <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-xl shadow-rose-600/40 ring ring-2 ring-purple-600 lg:max-w-xl">
         <h1 className="text-3xl font-semibold text-center text-purple-700 underline uppercase decoration-wavy">
-          User Login
+          Login
         </h1>
         <br />
         <form className="mt-6 ">

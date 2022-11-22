@@ -8,16 +8,16 @@ const initialState = {
   entities: [],
   detail: [],
   cartItems: JSON.parse(localStorage.getItem("cart")) || [],
-  quantity: 0,
-  totalAmount: 0,
-  // cartItems: [],
-  // count: 0,
+  // stock: 20,
+  // quantity: JSON.parse(localStorage.getItem("quantity")) || [],
 };
 
 export const Products = createAsyncThunk("products/fetchProducts", async () => {
   const res = await axios.get(PRODUCTS_URL);
   return res.data;
 });
+
+export const updateStock = createAsyncThunk();
 
 export const productDetail = createAsyncThunk(
   "products/fetchProducts",
@@ -62,18 +62,34 @@ const productSlice = createSlice({
   initialState,
   reducers: {
     addItems: (state, action) => {
-      state.cartItems.unshift(action.payload);
-      localStorage.setItem("cart", JSON.stringify(state.cartItems));
+      // state.cartItems.unshift(action.payload);
+      // localStorage.setItem("cart", JSON.stringify(state.cartItems));
+      const itemIndex = state.cartItems.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (itemIndex >= 0) {
+        // state.cartItems.unshift(action.payload);
+        localStorage.setItem("cart", JSON.stringify(state.cartItems));
+        localStorage.setItem(
+          "quantity",
+          JSON.stringify((state.cartItems[itemIndex].cartQuantity += 1))
+        );
+        // localStorage.setItem(
+        //   "stock",
+        //   JSON.stringify(state.cartItems[itemIndex].cartQuantity - stock)
+        // );
+        // state.cartItems[itemIndex].cartQuantity += 1;
+      } else {
+        // state.cartItems.unshift(action.payload);
+        // localStorage.setItem("cart", JSON.stringify(state.cartItems));
 
-      // const itemIndex = state.cartItems.findIndex(
-      //   (item) => item.id === action.payload.id
-      // );
-      // if (itemIndex >= 0) {
-      //   state.cartItems[itemIndex].cartQuantity += 1;
-      // } else {
-      //   const tempProduct = { ...action.payload, cartQuantity: 1 };
-      //   state.cartItems.push(tempProduct);
-      // }
+        const tempProduct = { ...action.payload, cartQuantity: 1 };
+        localStorage.setItem("cart", JSON.stringify(state.cartItems));
+        localStorage.setItem(
+          "quantity",
+          JSON.stringify(state.cartItems.push(tempProduct))
+        );
+      }
     },
 
     removeItems: (state, action) => {
@@ -83,8 +99,14 @@ const productSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
 
-    // increment: (state) => {
-    //   state.count += 1;
+    // increment: (state, action) => {
+    //   const itemIndex = state.cartItems.findIndex(
+    //     (item) => item.id === action.payload.id
+    //   );
+    //   localStorage.setItem(
+    //     "cart",
+    //     JSON.stringify((state.cartItems[itemIndex].cartQuantity += 1))
+    //   );
     // },
     // decrement: (state) => {
     //   state.count -= 1;
@@ -117,7 +139,7 @@ const productSlice = createSlice({
 });
 
 export const {
-  // increment,
+  increment,
   // decrement,
   // incrementByAmount,
   addItems,
